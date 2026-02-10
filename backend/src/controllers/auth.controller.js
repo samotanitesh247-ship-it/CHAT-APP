@@ -1,4 +1,4 @@
-import User from "../models/user.modal.js";                                            // import the model we created in models file;
+import User from "../models/user.model.js";                                            // import the model we created in models file;
 import bcrypt from "bcryptjs";                                                         // this present in the package.json for hashing the password and store in database;
 import { generateToken } from "../lib/utils.js";
 import cloudinary from "../lib/cloudinary.js"

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";                    // This middleware is just to check the user have token or not for update the profile;
-import User from "../models/user.modal.js";  
+import User from "../models/user.model.js";  
 
 
 export const protectRoute = async(req,res,next)=>{
