@@ -1,6 +1,7 @@
 import User from "../models/user.modal.js";                                            // import the model we created in models file;
 import bcrypt from "bcryptjs";                                                         // this present in the package.json for hashing the password and store in database;
 import { generateToken } from "../lib/utils.js";
+import cloudinary from "../lib/cloudinary.js"
 
 
 export const signup = async (req,res)=>{                                               //here we build the signup flow for login page;
@@ -88,5 +89,34 @@ export const logout = (req,res)=>{
 };
 
 export const updateProfile = async(req,res)=>{
+    try {
+        const {profilePic} = req.body;
+        const userId = req.user._id;
+        if(!profilePic){
+            return res.status(400).json({message: "Profile pic is required"});
+        }
 
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+        const updatedUser = await User.findByIdAndUpdate(userId ,{profilePic:uploadResponse.secure_url},{new:true});
+
+        res.status(200).json(updatedUser);
+         
+    } catch (error) {
+        console.log("error in updateProfile controller",error.message);
+        res.ststus(500).json({message: "Internal server error"});
+        
+    }
+
+};
+
+export const checkAuth = (req,res)=>{                         //we gonna call this function when we refresh our page it will check user is authincted or not
+    try {
+        if(!req.user){
+            return res.status(401).json({message:"User not found in request"});
+        }
+        res.status(200).json(req.user);   
+    } catch (error) {
+        console.log("error in checkAuth controller",error.message);
+        res.ststus(500).json({message: "Internal server error"});     
+    }
 };
