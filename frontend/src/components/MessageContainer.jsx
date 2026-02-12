@@ -17,7 +17,7 @@ const MessageContainer = () => {
 
   if (!selectedUser) {
     return (
-      <div className="flex-1 flex items-center justify-center text-slate-500">
+      <div className="flex-1 flex items-center justify-center text-base-content">
         Select conversation
       </div>
     );
@@ -25,12 +25,11 @@ const MessageContainer = () => {
 
   const selectedAvatar =
     selectedUser.profilePic ||
-      `https://i.pravatar.cc/150?u=${selectedUser._id}`;
+    `https://i.pravatar.cc/150?u=${selectedUser._id}`;
 
   const myAvatar =
     authUser.profilePic ||
-      `https://i.pravatar.cc/150?u=${authUser._id}`;
-
+    `https://i.pravatar.cc/150?u=${authUser._id}`;
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -54,19 +53,19 @@ const MessageContainer = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#020617] h-full overflow-hidden">
+    <div className="flex-1 flex flex-col bg-base-100 text-base-content h-full overflow-hidden">
 
       {/* HEADER */}
-      <div className="px-6 py-4 border-b border-slate-800 flex items-center gap-3">
+      <div className="px-6 py-4 border-b border-base-300 flex items-center gap-3 bg-base-200">
         <img
           src={selectedAvatar}
           className="w-10 h-10 rounded-full object-cover"
         />
         <div>
-          <h2 className="text-white font-semibold">
+          <h2 className="font-semibold">
             {selectedUser.fullName}
           </h2>
-          <p className="text-xs text-slate-400">Offline</p>
+          <p className="text-xs opacity-60">Online</p>
         </div>
       </div>
 
@@ -88,7 +87,7 @@ const MessageContainer = () => {
               )}
 
               <div className="flex flex-col max-w-xs">
-                <span className="text-xs text-slate-500 mb-1">
+                <span className="text-xs opacity-50 mb-1">
                   {new Date(msg.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -98,7 +97,7 @@ const MessageContainer = () => {
                 {msg.image && (
                   <img
                     src={msg.image}
-                    className="w-56 rounded-xl mb-1 border border-slate-700"
+                    className="w-56 rounded-xl mb-1 border border-base-300"
                   />
                 )}
 
@@ -107,8 +106,8 @@ const MessageContainer = () => {
                     className={`px-4 py-2 rounded-2xl text-sm break-words
                     ${
                       isMe
-                        ? "bg-blue-600 text-white rounded-br-none"
-                        : "bg-slate-800 text-slate-200 rounded-bl-none"
+                        ? "bg-primary text-primary-content rounded-br-none"
+                        : "bg-base-300 rounded-bl-none"
                     }`}
                   >
                     {msg.text}
@@ -132,16 +131,16 @@ const MessageContainer = () => {
       {/* IMAGE PREVIEW */}
       {image && (
         <div className="px-6 pb-2">
-          <img src={image} className="w-32 rounded-lg" />
+          <img src={image} className="w-32 rounded-lg border border-base-300" />
         </div>
       )}
 
       {/* INPUT */}
       <form
         onSubmit={handleSend}
-        className="p-4 border-t border-slate-800 flex items-center gap-3 bg-[#020617]"
+        className="p-4 border-t border-base-300 flex items-center gap-3 bg-base-200"
       >
-        <label className="cursor-pointer text-slate-400">
+        <label className="cursor-pointer">
           <ImageIcon size={20} />
           <input
             type="file"
@@ -155,11 +154,11 @@ const MessageContainer = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 bg-slate-900 text-white px-4 py-3 rounded-xl outline-none"
+          className="input input-bordered w-full"
         />
 
-        <button className="bg-orange-500 hover:bg-orange-600 px-5 py-3 rounded-xl">
-          <Send size={18} className="text-white" />
+        <button className="btn btn-primary">
+          <Send size={18} />
         </button>
       </form>
     </div>
