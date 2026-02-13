@@ -11,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
+  onlineUsers: [],
   socket: null,
 
   checkAuth: async () => {
@@ -82,11 +83,16 @@ export const useAuthStore = create((set, get) => ({
     if (!authUser || socket?.connected) return;
 
     const newSocket = io(BASE_URL, {
-      withCredentials: true,
+        query: { userId: authUser._id },
+        withCredentials: true,
     });
 
     newSocket.connect();
     set({ socket: newSocket });
+
+    newSocket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers : userIds });
+    });
 
     newSocket.on("connect", () => {
       console.log("Socket connected:", newSocket.id);
