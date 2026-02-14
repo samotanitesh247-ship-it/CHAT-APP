@@ -55,11 +55,6 @@ This project demonstrates a full-stack realtime messaging platform with authenti
 
 ---
 
-## 📸 Screenshots
-
-*(Include screenshots reflecting your UI — signup/login, sidebar, unread badge, chat window, profile UI)*
-
----
 
 ## 🚀 Live Usage
 
