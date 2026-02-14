@@ -4,16 +4,26 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Image as ImageIcon } from "lucide-react";
 
 const MessageContainer = () => {
-  const { selectedUser, messages, sendMessage } = useChatStore();
+  const { selectedUser, messages, sendMessage ,subscribeToNewMessages, unsubscribeFromNewMessages} = useChatStore();
   const { authUser } = useAuthStore();
 
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
-  const bottomRef = useRef();
+  const bottomRef = useRef(null);
 
+  // auto scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!selectedUser) return;
+
+    subscribeToNewMessages();
+
+    return () => unsubscribeFromNewMessages();
+  }, [selectedUser]);
+
 
   if (!selectedUser) {
     return (
@@ -30,6 +40,7 @@ const MessageContainer = () => {
   const myAvatar =
     authUser.profilePic ||
     `https://i.pravatar.cc/150?u=${authUser._id}`;
+
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -59,12 +70,11 @@ const MessageContainer = () => {
       <div className="px-6 py-4 border-b border-base-300 flex items-center gap-3 bg-base-200">
         <img
           src={selectedAvatar}
+          alt="avatar"
           className="w-10 h-10 rounded-full object-cover"
         />
         <div>
-          <h2 className="font-semibold">
-            {selectedUser.fullName}
-          </h2>
+          <h2 className="font-semibold">{selectedUser.fullName}</h2>
           <p className="text-xs opacity-60">Online</p>
         </div>
       </div>
@@ -72,7 +82,7 @@ const MessageContainer = () => {
       {/* MESSAGES */}
       <div className="flex-1 overflow-y-auto px-10 py-6 space-y-6 pb-24">
         {messages.map((msg) => {
-          const isMe = msg.senderId === authUser._id;
+          const isMe = msg.senderId === authUser?._id;
 
           return (
             <div
@@ -82,6 +92,7 @@ const MessageContainer = () => {
               {!isMe && (
                 <img
                   src={selectedAvatar}
+                  alt="user"
                   className="w-8 h-8 rounded-full mr-2 mt-1"
                 />
               )}
@@ -97,6 +108,7 @@ const MessageContainer = () => {
                 {msg.image && (
                   <img
                     src={msg.image}
+                    alt="message"
                     className="w-56 rounded-xl mb-1 border border-base-300"
                   />
                 )}
@@ -118,6 +130,7 @@ const MessageContainer = () => {
               {isMe && (
                 <img
                   src={myAvatar}
+                  alt="me"
                   className="w-8 h-8 rounded-full ml-2 mt-1"
                 />
               )}
@@ -131,7 +144,11 @@ const MessageContainer = () => {
       {/* IMAGE PREVIEW */}
       {image && (
         <div className="px-6 pb-2">
-          <img src={image} className="w-32 rounded-lg border border-base-300" />
+          <img
+            src={image}
+            alt="preview"
+            className="w-32 rounded-lg border border-base-300"
+          />
         </div>
       )}
 

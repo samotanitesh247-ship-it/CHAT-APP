@@ -23,10 +23,13 @@ export const signup = async (req,res)=>{                                        
         const salt = await bcrypt.genSalt(10);   
         const hashedPassword = await bcrypt.hash(password,salt);                       //hashing the password;
 
+        const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${fullName}`;
+
         const newUser = new User({                                                     //take the data now we generate jwt token for user;
             fullName,
             email,
             password: hashedPassword,
+            profilePic: avatarUrl,
         });
         if(newUser){                                                                   //we create a generate function in lib folder and utils.js file for keep code clean;
             generateToken(newUser._id,res)                                             //imported the function

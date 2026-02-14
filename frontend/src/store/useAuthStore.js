@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
+import { useChatStore } from "./useChatStore";
+
 
 const BASE_URL = "http://localhost:5001";
 
@@ -70,6 +72,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data });
+
       toast.success("Profile updated successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Update failed");

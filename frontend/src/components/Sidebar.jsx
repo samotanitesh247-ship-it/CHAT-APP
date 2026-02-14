@@ -4,14 +4,14 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
-  const { users, getUsers, selectedUser, setSelectedUser } = useChatStore();
+  const { users = [], getUsers, selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers = [] } = useAuthStore();
 
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [getUsers]);
 
   const filteredUsers = showOnlineOnly
     ? users.filter((u) => onlineUsers.includes(u._id))
@@ -20,7 +20,7 @@ const Sidebar = () => {
   return (
     <aside className="h-full w-80 bg-base-200 border-r border-base-300 flex flex-col">
 
-      {/* top */}
+      {/* TOP SECTION */}
       <div className="px-5 py-4 border-b border-base-300">
         <div className="flex items-center gap-2 text-base-content font-semibold">
           <Users size={18} />
@@ -36,19 +36,19 @@ const Sidebar = () => {
           />
           Show online only
           <span className="text-xs opacity-60">
-            ({onlineUsers.length} online)
+            ({onlineUsers.length-1} online)
           </span>
         </label>
       </div>
 
-      {/* users */}
+      {/* USER LIST */}
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {filteredUsers.map((user) => {
           const isOnline = onlineUsers.includes(user._id);
 
-          const avatar =
-            user.profilePic ||
-            `https://i.pravatar.cc/150?u=${user._id}`;
+          const avatar = user.profilePic
+            ? `${user.profilePic}?v=${user.updatedAt || user._id}`
+            : `https://api.dicebear.com/7.x/micah/svg?seed=${user._id}`;
 
           return (
             <div
@@ -61,6 +61,7 @@ const Sidebar = () => {
               <div className="relative">
                 <img
                   src={avatar}
+                  alt="avatar"
                   className="w-12 h-12 rounded-full object-cover"
                 />
 
